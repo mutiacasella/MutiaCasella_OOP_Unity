@@ -7,6 +7,8 @@ public class Player : MonoBehaviour
     public static Player Instance { get; set; }
     private PlayerMovement playerMovement;
     private Animator animator;
+    public Weapon currentWeapon;
+
 
     void Awake() {
         if (Instance != null && Instance != this) { 
@@ -14,6 +16,7 @@ public class Player : MonoBehaviour
         } 
         else { 
             Instance = this; 
+            DontDestroyOnLoad(gameObject);
         }
     }
 

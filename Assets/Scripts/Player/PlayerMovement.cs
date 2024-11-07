@@ -42,6 +42,8 @@ public class PlayerMovement : MonoBehaviour
             Mathf.Clamp(newVelocity.x, -maxSpeed.x, maxSpeed.x),
             Mathf.Clamp(newVelocity.y, -maxSpeed.y, maxSpeed.y)
         );    
+
+        MoveBound();
     }
 
     public Vector2 GetFriction() {
@@ -63,7 +65,13 @@ public class PlayerMovement : MonoBehaviour
     }
 
     private void MoveBound() {
-        
+        Vector2 min = Camera.main.ViewportToWorldPoint(new Vector2(0, 0));
+        Vector2 max = Camera.main.ViewportToWorldPoint(new Vector2(1, 1));
+
+        transform.position = new Vector2(
+            Mathf.Clamp(transform.position.x, min.x + (transform.localScale.x / 3), max.x - (transform.localScale.x / 3)),
+            Mathf.Clamp(transform.position.y, min.y + (transform.localScale.y / 10), max.y - (transform.localScale.y / 1.5f))
+        );
     }
 
     public bool IsMoving() {
