@@ -8,9 +8,6 @@ public class Enemy : MonoBehaviour
 
     void Start()
     {
-        // Contoh inisialisasi level default
         Level = 1;
     }
-
-    // Tambahkan method atau property lain sesuai kebutuhan
 }

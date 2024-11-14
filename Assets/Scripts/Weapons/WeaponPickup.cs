@@ -32,7 +32,6 @@ public class WeaponPickup : MonoBehaviour
 
             player.currentWeapon = instantiate_Weapon;
 
-            //entah ini bener ga satu baris ini
             instantiate_Weapon.EnableShooting();
             
             TurnVisual(true, instantiate_Weapon);  
