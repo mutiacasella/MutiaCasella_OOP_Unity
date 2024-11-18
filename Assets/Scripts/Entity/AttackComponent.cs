@@ -36,7 +36,6 @@ public class AttackComponent : MonoBehaviour
         if (hitbox != null && (invincibility == null || !invincibility.isInvincible))
         {
             hitbox.Damage(damage);
-            Debug.Log("Collided with " + collision.gameObject.name + ". Damage dealt: " + damage);
         }
     }
 }

@@ -53,7 +53,13 @@ public class EnemyBoss : MonoBehaviour
     {
         if (bulletPrefab != null && bulletSpawnPoint != null)
         {
-            Instantiate(bulletPrefab, bulletSpawnPoint.position, Quaternion.identity);
+            GameObject bullet = Instantiate(bulletPrefab, bulletSpawnPoint.position, Quaternion.identity);
+
+            Bullet bulletScript = bullet.GetComponent<Bullet>();
+            if (bulletScript != null)
+            {
+                bulletScript.direction = Vector2.down;
+            }
         }
     }
 }

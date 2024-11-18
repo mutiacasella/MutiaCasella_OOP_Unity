@@ -3,33 +3,65 @@ using UnityEngine;
 
 public class EnemySpawner : MonoBehaviour
 {
-    public GameObject[] enemyPrefabs;
-    public float spawnInterval = 2f;
-    public int numberOfEnemiesPerSpawn = 3;
+    [Header("Enemy Prefabs")]
+    public Enemy spawnedEnemy;
 
-    void Start()
+    [SerializeField] private int minimumKillsToIncreaseSpawnCount = 3;
+    public int totalKill = 0;
+    private int totalKillWave = 0;
+
+    [SerializeField] private float spawnInterval = 3f;
+
+    [Header("Spawned Enemies Counter")]
+    public int spawnCount = 0;
+    public int defaultSpawnCount = 1;
+    public int spawnCountMultiplier = 1;
+    public int multiplierIncreaseCount = 1;
+
+    public CombatManager combatManager;
+
+    public bool isSpawning = false;
+
+    private void Start()
     {
+        spawnCount = defaultSpawnCount;
         StartCoroutine(SpawnEnemies());
     }
 
-    IEnumerator SpawnEnemies()
+    private IEnumerator SpawnEnemies()
     {
-        while (true)
+        isSpawning = true;
+        while (isSpawning)
         {
-            Debug.Log("muncul");
-            for (int i = 0; i < numberOfEnemiesPerSpawn; i++)
+            for (int i = 0; i < spawnCount; i++)
             {
-                int randomIndex = Random.Range(0, enemyPrefabs.Length);
-                GameObject selectedEnemy = enemyPrefabs[randomIndex];
+                if (spawnedEnemy != null)
+                {
+                    Instantiate(spawnedEnemy, transform.position, Quaternion.identity);
+                }
+            }
 
-                float spawnY = Random.Range(0.2f, 0.8f); 
-                Vector2 spawnPosition = Camera.main.ViewportToWorldPoint(new Vector2(Random.value < 0.5f ? 0 : 1, spawnY));
-                spawnPosition.x += spawnPosition.x < 0 ? -1f : 1f; 
-
-                Instantiate(selectedEnemy, spawnPosition, Quaternion.identity);
+            totalKillWave += spawnCount;
+            if (totalKillWave >= minimumKillsToIncreaseSpawnCount)
+            {
+                totalKillWave = 0;
+                spawnCount += multiplierIncreaseCount * spawnCountMultiplier;
             }
 
             yield return new WaitForSeconds(spawnInterval);
         }
+    }
+
+    public void StopSpawning()
+    {
+        isSpawning = false;
+        StopAllCoroutines();
+    }
+
+    public void ResetSpawner()
+    {
+        spawnCount = defaultSpawnCount;
+        totalKill = 0;
+        totalKillWave = 0;
     }
 }
