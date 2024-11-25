@@ -35,5 +35,37 @@ public class EnemyHorizontal : MonoBehaviour
         {
             Destroy(gameObject);
         }
+    }       
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.CompareTag("PlayerBullet"))
+        {
+            HealthComponent healthComponent = GetComponent<HealthComponent>();
+            if (healthComponent != null)
+            {
+                healthComponent.Subtract(1);
+                
+                if (healthComponent.Health <= 0)
+                {
+                    Die();
+                }
+            }
+
+            Destroy(collision.gameObject);
+        }
+    }
+
+    private void Die()
+    {
+        
+        if (EnemySpawner.Instance != null)
+        {
+            EnemySpawner.Instance.OnEnemyKilled(1);
+        }
+
+        UIManager.Instance.UpdatePoints(1, 1);
+        UIManager.Instance.UpdateEnemiesRemaining(UIManager.Instance.EnemiesRemaining - 1);
+        Destroy(gameObject);
     }
 }

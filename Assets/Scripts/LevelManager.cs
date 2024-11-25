@@ -5,7 +5,7 @@ using System.Collections;
 public class LevelManager : MonoBehaviour
 {
     [SerializeField] private Animator animator;
-
+    
     private void Awake() {
         animator.gameObject.SetActive(false);
     }

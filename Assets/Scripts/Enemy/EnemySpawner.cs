@@ -3,6 +3,9 @@ using UnityEngine;
 
 public class EnemySpawner : MonoBehaviour
 {
+    public static EnemySpawner Instance;
+    [SerializeField] private int currentWave = 1;
+
     [Header("Enemy Prefabs")]
     public Enemy spawnedEnemy;
 
@@ -22,10 +25,24 @@ public class EnemySpawner : MonoBehaviour
 
     public bool isSpawning = false;
 
+    private void Awake()
+    {
+        if (Instance == null)
+        {
+            Instance = this;
+        }
+        else
+        {
+            Destroy(gameObject);
+        }
+    }
+
     private void Start()
     {
         spawnCount = defaultSpawnCount;
         StartCoroutine(SpawnEnemies());
+        UIManager.Instance.UpdateEnemiesRemaining(spawnCount);
+        UIManager.Instance.UpdateWave(currentWave);
     }
 
     private IEnumerator SpawnEnemies()
@@ -63,5 +80,29 @@ public class EnemySpawner : MonoBehaviour
         spawnCount = defaultSpawnCount;
         totalKill = 0;
         totalKillWave = 0;
+    }
+
+    public void OnEnemyKilled(int enemyLevel)
+    {
+        totalKill++;
+        UIManager.Instance.UpdatePoints(enemyLevel, 1);
+
+        int enemiesLeft = Mathf.Max(0, spawnCount - totalKill);
+        UIManager.Instance.UpdateEnemiesRemaining(enemiesLeft);
+
+        if (enemiesLeft <= 0)
+        {
+            NextWave();
+        }
+    }
+
+    private void NextWave()
+    {
+        currentWave++;
+        spawnCount += multiplierIncreaseCount * spawnCountMultiplier;
+        totalKill = 0;
+
+        UIManager.Instance.UpdateWave(currentWave);
+        UIManager.Instance.UpdateEnemiesRemaining(spawnCount);
     }
 }

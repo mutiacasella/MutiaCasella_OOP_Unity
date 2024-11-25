@@ -29,5 +29,34 @@ public class EnemyTargeting : MonoBehaviour
         {
             Destroy(gameObject);
         }
+
+        if (collision.CompareTag("PlayerBullet"))
+        {
+            HealthComponent healthComponent = GetComponent<HealthComponent>();
+            if (healthComponent != null)
+            {
+                healthComponent.Subtract(1);
+                
+                if (healthComponent.Health <= 0)
+                {
+                    Die();
+                }
+            }
+
+            Destroy(collision.gameObject);
+        }
+    }
+
+    private void Die()
+    {
+        
+        if (EnemySpawner.Instance != null)
+        {
+            EnemySpawner.Instance.OnEnemyKilled(3);
+        }
+
+        UIManager.Instance.UpdatePoints(3, 1);
+        UIManager.Instance.UpdateEnemiesRemaining(UIManager.Instance.EnemiesRemaining - 1);
+        Destroy(gameObject);
     }
 }

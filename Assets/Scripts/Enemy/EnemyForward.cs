@@ -21,4 +21,36 @@ public class EnemyForward : MonoBehaviour
             Destroy(gameObject);
         }
     }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.CompareTag("PlayerBullet"))
+        {
+            HealthComponent healthComponent = GetComponent<HealthComponent>();
+            if (healthComponent != null)
+            {
+                healthComponent.Subtract(1);
+                
+                if (healthComponent.Health <= 0)
+                {
+                    Die();
+                }
+            }
+
+            Destroy(collision.gameObject);
+        }
+    }
+
+    private void Die()
+    {
+        
+        if (EnemySpawner.Instance != null)
+        {
+            EnemySpawner.Instance.OnEnemyKilled(2);
+        }
+
+        UIManager.Instance.UpdatePoints(2, 1);
+        UIManager.Instance.UpdateEnemiesRemaining(UIManager.Instance.EnemiesRemaining - 1);
+        Destroy(gameObject);
+    }
 }

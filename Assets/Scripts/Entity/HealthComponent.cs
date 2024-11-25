@@ -13,11 +13,13 @@ public class HealthComponent : MonoBehaviour
     void Start()
     {
         health = maxHealth;
+        UIManager.Instance.UpdateHealth(health);
     }
 
     public void Subtract(int damage)
     {
         health -= damage;
+        UIManager.Instance.UpdateHealth(health);
 
         if (health <= 0)
         {
